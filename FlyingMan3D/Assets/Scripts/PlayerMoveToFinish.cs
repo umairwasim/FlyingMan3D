@@ -90,7 +90,7 @@ public class PlayerMoveToFinish : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         
-        if (collision.gameObject.transform.root.gameObject.tag == "Enemy")
+        if (collision.gameObject.transform.root.gameObject.CompareTag("Enemy"))
         {
             
             if (!collision.gameObject.transform.root.GetComponent<EnemyFinish>().IsDie && !IsDie)

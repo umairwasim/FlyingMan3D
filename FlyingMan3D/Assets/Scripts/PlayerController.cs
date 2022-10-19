@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,10 +10,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxLaunchSpeed = 60f;
     [SerializeField] private float movementSpeed = 100f;
     [SerializeField] private float mobileSpeed = 10f;
-    
+
     [SerializeField] private Transform capsule;
     [SerializeField] private FixedJoint joint;
-    
+
     [HideInInspector] public bool isPassed;
     [HideInInspector] public Rigidbody[] bodies;
 
@@ -31,10 +32,12 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        SelfHips = transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
+
+        SelfHips = GameObject.FindGameObjectWithTag("Hips");
+        //SelfHips = transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
         bodies = GetComponentsInChildren<Rigidbody>();
         initialPos = capsule.position;
-        
+
         players.Add(this);
     }
 
@@ -49,7 +52,7 @@ public class PlayerController : MonoBehaviour
 
                 foreach (Rigidbody rb in bodies)
                 {
-                    rb.velocity += new Vector3(xValue, 0, 0) * Time.deltaTime * movementSpeed;
+                    rb.velocity += movementSpeed * Time.deltaTime * new Vector3(xValue, 0, 0);
                 }
             }
             else
@@ -91,11 +94,12 @@ public class PlayerController : MonoBehaviour
     private void CheckForBoundaries()
     {
         float xPos = SelfHips.transform.position.x;
+        Vector3 selfVelocity = SelfHips.GetComponent<Rigidbody>().velocity;
 
         if (xPos >= 20f || xPos <= -20f)
         {
             float newX = Mathf.Sign(xPos) * -3f;
-            SelfHips.GetComponent<Rigidbody>().velocity = new Vector3(newX, SelfHips.GetComponent<Rigidbody>().velocity.y, SelfHips.GetComponent<Rigidbody>().velocity.z);
+            selfVelocity = new Vector3(newX, selfVelocity.y, selfVelocity.z);
         }
     }
 
@@ -133,5 +137,5 @@ public class PlayerController : MonoBehaviour
             Spawner.Instance.SpawnObjects(bodies[0].velocity);
         }
     }
-    
+
 }
