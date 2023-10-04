@@ -93,6 +93,8 @@ public class PlayerController : MonoBehaviour
 
     private void CheckForBoundaries()
     {
+        if (!SelfHips)
+            return;
         float xPos = SelfHips.transform.position.x;
         Vector3 selfVelocity = SelfHips.GetComponent<Rigidbody>().velocity;
 
